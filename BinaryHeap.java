@@ -1,95 +1,95 @@
 public class BinaryHeap
 {
-	private int[] arr;
-	private int size;
-	
-	//constructor
-    public BinaryHeap()
-    {
+	public int[] arr;
+  public int size;
+  
+  public BinaryHeap()
+  {
 		arr = new int[1];
 		size = 0;
-	}
-    
-    //get parent index
-    int parent(int index)
+  }
+  
+  //get parent index
+  int parent(int index)
+  {
+    return (index - 1) / 2;
+  }
+  
+  //get left child index
+  int leftChild(int index)
+  {
+    return (index * 2) + 1;
+  }
+  
+  //get right child index
+  int rightChild(int index)
+  {
+    return (index * 2) + 2;
+  }
+  
+  public void add(int item)
+  {
+    if(arr.length <= size)
     {
-		return (index - 1) / 2;
-	}
-    
-    //get left child index
-    int leftChild(int index)
+      grow();
+    }
+    arr[size++] = item;
+    int index = size - 1;
+    while(arr[index] < arr[parent(index)])
     {
-		return (index * 2) + 1;
-	}
-    
-    //get right child index
-    int rightChild(int index)
+      swap(index, parent(index));
+      index = parent(index);
+    }
+  }
+  
+  public int remove()
+  {
+    int remove = arr[0];
+    swap(0, --size);
+    if (size != 0)
     {
-		return (index * 2) + 2;
+      shiftDown(0);
+    }
+    return remove;
+  }
+
+  public void grow()
+  {
+		int[] newArray = new int[arr.length * 2];
+		System.arraycopy(arr, 0, newArray, 0, arr.length);
+		arr = newArray;
+  }
+  
+  public void swap(int i, int j)
+  {
+    int temporary;
+		temporary = arr[i];
+		arr[i] = arr[j];
+    arr[j] = temporary;
+  }
+  
+  public void shiftDown(int pos)
+  {
+    if (leftChild(pos) >= size)
+    {
+      return;
     }
     
-    public void add(int item)
-    {
-        if(arr.length <= size)
-        {
-			growArray();
-		}
-		arr[size++] = item;
-		int index = size - 1;
-        while(arr[index] < arr[parent(index)])
-        {
-			swap(index, parent(index));
-			index = parent(index);
-		}
-	}
-
-    public int remove()
-    {
-		int remove = arr[0];
-		swap(0, --size);
-        if (size != 0)
-        {
-			shiftDown(0);
-		}
-		return remove;
-    }
-	
-    private void swap(int pos1, int pos2)
-    {
-		int tmp;
-		tmp = arr[pos1];
-		arr[pos1] = arr[pos2];
-		arr[pos2] = tmp;
-	}
-
-    private void growArray()
-    {
-		int[] new_arr = new int[arr.length * 2];
-		System.arraycopy(arr, 0, new_arr, 0, arr.length);
-		arr = new_arr;
-	}
+    //begin on left position
+    int child = leftChild(pos);
     
-    private void shiftDown(int pos)
+    //set index with right child if R < L
+    if (rightChild(pos) < size && arr[rightChild(pos)] < arr[child])
     {
-        if (leftChild(pos) >= size)
-        {
-            return;
-        }
-
-        int child = leftChild(pos);
-        
-        //set index with right child if R < L
-        if (rightChild(pos) < size && arr[rightChild(pos)] < arr[child])
-        {
-			child = rightChild(pos); 
-        }
-
-        //swap index with smaller child
-        //move down to smaller child
-        if (arr[child] < arr[pos])
-        {
-			swap(child, pos);
-			shiftDown(child);
-		}
+      child = rightChild(pos); 
+    }
+    
+    //swap index with smaller child
+    //move down to smaller child
+    if (arr[child] < arr[pos])
+    {
+      swap(child, pos);
+      shiftDown(child);
+    }
 	}
 }
